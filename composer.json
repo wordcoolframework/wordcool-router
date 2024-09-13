@@ -4,8 +4,7 @@
     "type": "library",
     "autoload": {
         "psr-4": {
-            "Router\\": "src/Router/",
-            "App\\": "src/App"
+            "Router\\": "src/Router/"
         }
     },
     "authors": [
@@ -23,5 +22,7 @@
     },
     "require": {
         "php": ">=7.4"
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
