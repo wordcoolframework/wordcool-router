@@ -1,3 +1,3 @@
 # wordcool-router
 
-wordcool framework router package for wordpress theme development.
+WordCool framework router package for WordPress theme development version 1.0.0
