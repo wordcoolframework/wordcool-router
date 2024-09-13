@@ -1,5 +1,5 @@
 {
-    "name": "vendor/wordcool-router",
+    "name": "wordcool-framework/wordcool-router",
     "description": "wordcool framework router package",
     "type": "library",
     "autoload": {
