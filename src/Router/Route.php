@@ -11,45 +11,82 @@ class Route implements RouteContract{
 
     use MatchesRoutes, CallsControllers, HandlesMiddleware;
 
-    private static $routes = [];
+    private static array $routes = [];
     private static array $middlewares = [];
+    private static $lastAddedRoute;
 
-    public static function get($url, $handler, $method = 'GET', $middleware = null) {
+    public static function get($url, $handler, $method = 'GET', $middleware = null) :self {
         self::addRoute($url, $handler, $method, 'GET', $middleware);
+        return new self;
     }
     
-    public static function post($url, $handler, $method = 'POST', $middleware = null) {
+    public static function post($url, $handler, $method = 'POST', $middleware = null) :self {
         self::addRoute($url, $handler, $method, 'POST', $middleware);
+        return new self;
     }
 
-    public static function put($url, $handler, $method = 'PUT', $middleware = null) {
+    public static function put($url, $handler, $method = 'PUT', $middleware = null) :self {
         self::addRoute($url, $handler, $method, 'PUT', $middleware);
+        return new self;
     }
 
-    public static function patch($url, $handler, $method = 'PATCH', $middleware = null) {
+    public static function patch($url, $handler, $method = 'PATCH', $middleware = null) :self {
         self::addRoute($url, $handler, $method, 'PATCH', $middleware);
+        return new self;
     }
 
-    public static function delete($url, $handler, $method = 'DELETE', $middleware = null) {
+    public static function delete($url, $handler, $method = 'DELETE', $middleware = null) :self {
         self::addRoute($url, $handler, $method, 'DELETE', $middleware);
+        return new self;
     }
 
-    public static function options($url, $handler, $method = 'OPTIONS', $middleware = null) {
+    public static function options($url, $handler, $method = 'OPTIONS', $middleware = null) :self{
         self::addRoute($url, $handler, $method, 'OPTIONS', $middleware);
+
+        return new self;
     }
     
-    public static function addRoute($url, $handler, $method, $requestMethod, $middleware = null) {
-        $url = preg_replace('/:([a-zA-Z]+)/', '([a-zA-Z0-9_-]+)', $url);
+    public static function addRoute($url, $handler, $method, $requestMethod, $middleware = null) :self{
+//        $url = preg_replace('/:([a-zA-Z]+)/', '([a-zA-Z0-9_-]+)', $url);
         self::$routes[] = array(
             'url'               => $url,
             'handler'           => $handler,
             'method'            => $method,
             'request_method'    => $requestMethod,
-            'middleware'       => $middleware
+            'middleware'        => $middleware,
+            'name'              => null,
         );
+
+        self::$lastAddedRoute = &self::$routes[count(self::$routes) - 1];
+
+        return new self;
     }
-    
-    public static function addMiddleware($middleware){
+
+    public static function name($routeName) :self {
+        if (self::$lastAddedRoute) {
+            self::$lastAddedRoute['name'] = $routeName;
+        }
+        return new self;
+    }
+
+    public static function route(string $name, array $params = []) {
+        foreach (self::$routes as $route) {
+            if ($route['name'] === $name) {
+                $url = $route['url'];
+
+                if (!empty($params)) {
+                    foreach ($params as $key => $value) {
+                        $url = preg_replace("/:$key/", $value, $url); // جایگذاری ساده
+                    }
+                }
+
+                return $url;
+            }
+        }
+        throw new \Exception('Route not found.');
+    }
+
+    public static function addMiddleware($middleware) :void{
         self::$middlewares[] = $middleware;
     }
 

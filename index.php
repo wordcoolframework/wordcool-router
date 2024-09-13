@@ -20,4 +20,12 @@ Route::get(
     'Auth'
 );
 
+Route::get(
+    '/redirect',
+    'HomeController@redirect',
+);
+
+
+Route::get('/test/:id','HomeController@test')->name('test');
+
 Route::dispatch();

@@ -11,7 +11,8 @@ trait MatchesRoutes {
                 continue;
             }
 
-            $pattern = '#^' . $route['url'] . '$#';
+            $pattern = preg_replace('/:([a-zA-Z0-9_-]+)/', '([a-zA-Z0-9_-]+)', $route['url']);
+            $pattern = '#^' . $pattern . '$#';
             if (preg_match($pattern, $uri, $matches)) {
                 array_shift($matches); // Remove the full match
 
