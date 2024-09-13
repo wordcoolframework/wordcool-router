@@ -4,7 +4,8 @@
     "type": "library",
     "autoload": {
         "psr-4": {
-            "Router\\": "src/Router/"
+            "Router\\": "src/Router/",
+            "App\\": "App/"
         }
     },
     "authors": [
