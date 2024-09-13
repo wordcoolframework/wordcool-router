@@ -8,7 +8,7 @@ require_once 'vendor/autoload.php';
    echo "Arash";
 }, 'GET', 'Auth');
 
-\Router\Route::get("/param/:name", function($name){
+\Router\Route::get("/param/:name", function ($name){
     echo "param is {$name}";
 });
 
