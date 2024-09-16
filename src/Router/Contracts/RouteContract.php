@@ -19,4 +19,3 @@ interface RouteContract{
     public static function dispatch();
     
 }
-

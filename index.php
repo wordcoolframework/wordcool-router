@@ -9,15 +9,14 @@ Route::get("/", function (){
    echo "Arash";
 }, 'GET', 'Auth');
 
-Route::get("/param/:name", function ($name){
-    echo "param is {$name}";
+Route::get("/test/:id", function ($id){
+    echo "param is {$id}";
 });
 
 Route::get(
     '/home/:id',
     'HomeController@index',
     'GET',
-    'Auth'
 );
 
 Route::get(
@@ -25,7 +24,17 @@ Route::get(
     'HomeController@redirect',
 );
 
+Route::get('/test/:id','HomeController@test')
+    ->name('test');
 
-Route::get('/test/:id','HomeController@test')->name('test');
+Route::middleware('Auth', function (){
+    Route::get('/inside-middleware', function (){
+       echo "inside middleware when return true";
+    });
+});
+
+Route::fallback(function (){
+   echo "404 - not found";
+});
 
 Route::dispatch();

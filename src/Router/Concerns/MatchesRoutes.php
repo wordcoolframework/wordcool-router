@@ -7,24 +7,44 @@ trait MatchesRoutes {
     public static function matchRoute($uri, $method, &$matches){
 
         foreach (self::$routes as $route) {
-            if ($route['request_method'] != $method) {
+
+            if (!self::isRequestMethodMatching($route, $method)) {
                 continue;
             }
 
-            $pattern = preg_replace('/:([a-zA-Z0-9_-]+)/', '([a-zA-Z0-9_-]+)', $route['url']);
-            $pattern = '#^' . $pattern . '$#';
-            if (preg_match($pattern, $uri, $matches)) {
-                array_shift($matches); // Remove the full match
+            $pattern = self::generateRoutePattern($route['url']);
 
-                $queryString = parse_url($uri, PHP_URL_QUERY);
-                parse_str($queryString, $queryParams);
-                $matches[] = $queryParams; // Add query parameters
+            if (self::matchUriWithPattern($pattern, $uri, $matches)) {
+
+                self::extractQueryParameters($uri, $matches);
 
                 return $route;
+
             }
         }
 
-        throw new RouteException('Route Not Found', 404);
+        return null;
+    }
+
+    private static function isRequestMethodMatching($route, $method) : bool{
+        return $route['request_method'] == $method;
+    }
+
+    private static function generateRoutePattern($url){
+        $pattern = preg_replace('/:([a-zA-Z0-9_-]+)/', '([a-zA-Z0-9_-]+)', $url);
+        return '#^' . $pattern . '$#';
+    }
+
+    private static function matchUriWithPattern($pattern, $uri, &$matches){
+        return preg_match($pattern, $uri, $matches);
+    }
+
+    private static function extractQueryParameters($uri, &$matches){
+        array_shift($matches); // Remove the full match
+
+        $queryString = parse_url($uri, PHP_URL_QUERY);
+        parse_str($queryString, $queryParams);
+        $matches[] = $queryParams; // Add query parameters
     }
 
 }

@@ -14,6 +14,7 @@ class Route implements RouteContract{
     private static array $routes = [];
     private static array $middlewares = [];
     private static $lastAddedRoute;
+    private static $fallback ;
 
     public static function get($url, $handler, $method = 'GET', $middleware = null) :self {
         self::addRoute($url, $handler, $method, 'GET', $middleware);
@@ -46,8 +47,7 @@ class Route implements RouteContract{
         return new self;
     }
     
-    public static function addRoute($url, $handler, $method, $requestMethod, $middleware = null) :self{
-//        $url = preg_replace('/:([a-zA-Z]+)/', '([a-zA-Z0-9_-]+)', $url);
+    public static function addRoute($url, $handler, $method, $requestMethod, $middleware = null) :self {
         self::$routes[] = array(
             'url'               => $url,
             'handler'           => $handler,
@@ -62,9 +62,11 @@ class Route implements RouteContract{
         return new self;
     }
 
-    public static function name($routeName) :self {
-        if (self::$lastAddedRoute) {
+    public static function name($routeName) : self {
+        if (isset(self::$lastAddedRoute) && is_array(self::$lastAddedRoute)) {
             self::$lastAddedRoute['name'] = $routeName;
+        } else {
+            throw new \Exception("No route available to name.");
         }
         return new self;
     }
@@ -76,7 +78,7 @@ class Route implements RouteContract{
 
                 if (!empty($params)) {
                     foreach ($params as $key => $value) {
-                        $url = preg_replace("/:$key/", $value, $url); // جایگذاری ساده
+                        $url = preg_replace("/:$key/", $value, $url);
                     }
                 }
 
@@ -86,16 +88,44 @@ class Route implements RouteContract{
         throw new \Exception('Route not found.');
     }
 
+    public static function middleware(string $name, callable $callback) : void{
+        $previousRoutes = self::$routes;
+        $callback();
+
+        $newRoutes = array_slice(self::$routes, count($previousRoutes));
+
+        foreach ($newRoutes as &$route) {
+            $middlewareClass = 'App\Http\Middlewares\\' . $name;
+            if(!class_exists($middlewareClass)){
+                throw new \Exception("middleware {$name} not exist");
+            }
+            $middlewareObj = new $middlewareClass();
+            $route['middleware'] = $name;
+        }
+    }
+
+    public static function fallback(callable $handler) :void{
+        self::$fallback = $handler;
+    }
+
     public static function addMiddleware($middleware) :void{
         self::$middlewares[] = $middleware;
     }
 
-    public static function dispatch(){
+    public static function dispatch() :bool{
+
         $uri = $_SERVER['REQUEST_URI'];
         $method = $_SERVER['REQUEST_METHOD'];
 
         try {
             $route = self::matchRoute($uri, $method, $matches);
+
+            if (!$route) {
+                if (isset(self::$fallback)) {
+                    call_user_func(self::$fallback);
+                }
+                return false;
+            }
 
             if(!self::handleMiddleware($route)){
                 return false;

@@ -11,7 +11,7 @@ class HomeController{
     }
 
     public function redirect(){
-        $url = Route::route('test', ['id' => 1]); // اضافه کردن پارامتر برای مسیر test
+        $url = Route::route('test', ['id' => 1]);
         header("Location: $url");
         exit();
     }

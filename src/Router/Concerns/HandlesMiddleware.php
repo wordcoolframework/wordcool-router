@@ -7,23 +7,45 @@ use Router\Exceptions\RouteException;
 trait HandlesMiddleware{
 
     public static function handleMiddleware($route){
-        if ($route['middleware']) {
-            $middlewares = explode(',', $route['middleware']);
 
-            foreach ($middlewares as $middleware) {
-                if (!in_array($middleware, self::$middlewares)) {
-                    throw new RouteException("Middleware '$middleware' is not registered", 500);
-                }
+        if (!isset($middleware) || empty($middleware)) {
+            return true;
+        }
 
-                $middlewareClass = 'App\Http\Middlewares\\' . $middleware;
-                $middlewareObj = new $middlewareClass();
+        $middlewares = self::brokeMiddlewareWithSeperator(',', $route['middleware']);
 
-                if (!$middlewareObj->handle()) {
-                    return false;
-                }
+        foreach ($middlewares as $middleware) {
+
+            self::checkMiddleware($middleware);
+
+            $middlewareObj = self::instantiateMiddleware(
+                $middleware,
+                'App\Http\Middlewares\\',
+            );
+
+            if (!$middlewareObj->handle()) {
+                return false;
             }
         }
         return true;
+    }
+
+    private static function brokeMiddlewareWithSeperator(
+        string $separator, $middleware
+    ) : array{
+        return explode($separator,$middleware);
+    }
+
+    private static function checkMiddleware($middleware){
+        if (!in_array($middleware, self::$middlewares)) {
+            throw new RouteException("Middleware '$middleware' is not registered", 500);
+        }
+        return true;
+    }
+
+    private static function instantiateMiddleware($middleware, $path){
+        $middlewareClass = $path . $middleware;
+        return new $middlewareClass();
     }
 
 }

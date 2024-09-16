@@ -2,6 +2,8 @@
 
 namespace App\Http\Middlewares;
 
+use Router\Route;
+
 class Auth{
 
     public function handle(){
