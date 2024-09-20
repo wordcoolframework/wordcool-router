@@ -2,17 +2,24 @@
 
 namespace Router\Concerns;
 
+use Configuration\Config;
 use Router\Exceptions\RouteException;
 
 trait CallsControllers{
 
     public static function callControllerMethod(string $handler, $params) :void{
 
-        $handlerParts = self::brokeControllerAndMehod('@', $handler);
+        $handlerParts = self::brokeControllerAndMehod(
+            Config::get('app.ControllerPath'),
+            $handler
+        );
 
         self::validateHanlderFormat($handlerParts);
 
-        $controllerName = self::setControllerPath('App\Http\Controllers\\', $handlerParts[0]);
+        $controllerName = self::setControllerPath(
+            Config::get('app.ControllerPath'),
+            $handlerParts[0]
+        );
         $methodName = $handlerParts[1];
 
         self::controllerNotExist($controllerName);

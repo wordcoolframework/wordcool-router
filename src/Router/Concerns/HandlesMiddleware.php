@@ -2,6 +2,7 @@
 
 namespace Router\Concerns;
 
+use Configuration\Config;
 use Router\Exceptions\RouteException;
 
 trait HandlesMiddleware{
@@ -20,7 +21,7 @@ trait HandlesMiddleware{
 
             $middlewareObj = self::instantiateMiddleware(
                 $middleware,
-                'App\Http\Middlewares\\',
+                Config::get('app.MiddlewarePath'),
             );
 
             if (!$middlewareObj->handle()) {
