@@ -13,8 +13,8 @@ final class Config {
 //        example : app.platform  => app is file | platform in key config
         if (self::countSeparationPartsIsTwo($parts)) {
 
-            $file = self::getPart('file', $parts);
-            $key  = self::getPart('key', $parts);
+            $file = self::getPart(partName: 'file', part: $parts);
+            $key  = self::getPart(partName: 'key', part: $parts);
 
             if (!isset(self::$config[$file])) {
 

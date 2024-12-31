@@ -6,7 +6,7 @@ use Router\Route;
 Route::addMiddleware('Auth');
 
 Route::get("/", static function (){
-   echo \Configuration\Config::get('app.platform');
+   echo "asdfaf";
 }, 'GET', 'Auth');
 
 Route::get("/test/:id", static function ($id){

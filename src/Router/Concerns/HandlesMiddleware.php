@@ -21,7 +21,7 @@ trait HandlesMiddleware{
 
             $middlewareObj = self::instantiateMiddleware(
                 $middleware,
-                Config::get('app.MiddlewarePath'),
+                "App\Http\Middlewares\\",
             );
 
             if (!$middlewareObj->handle()) {

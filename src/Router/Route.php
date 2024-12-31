@@ -8,6 +8,7 @@ use Router\Concerns\CallsControllers;
 use Router\Concerns\HandlesMiddleware;
 use Router\Concerns\MatchesRoutes;
 use Router\Contracts\RouteContract;
+use Router\Exceptions\RouteException;
 
 class Route implements RouteContract{
 
@@ -22,7 +23,7 @@ class Route implements RouteContract{
         self::addRoute($url, $handler, $method, 'GET', $middleware);
         return new self;
     }
-    
+
     public static function post($url, $handler, $method = 'POST', $middleware = null) :self {
         self::addRoute($url, $handler, $method, 'POST', $middleware);
         return new self;
@@ -45,10 +46,9 @@ class Route implements RouteContract{
 
     public static function options($url, $handler, $method = 'OPTIONS', $middleware = null) :self{
         self::addRoute($url, $handler, $method, 'OPTIONS', $middleware);
-
         return new self;
     }
-    
+
     public static function addRoute($url, $handler, $method, $requestMethod, $middleware = null) :self {
         self::$routes[] = array(
             'url'               => $url,
@@ -97,9 +97,9 @@ class Route implements RouteContract{
         $newRoutes = array_slice(self::$routes, count($previousRoutes));
 
         foreach ($newRoutes as &$route) {
-            $middlewareClass = Config::get('app.MiddlewarePath') . $name;
+            $middlewareClass = "App\Http\Middlewares\\" . $name;
             if(!class_exists($middlewareClass)){
-                throw new Exception("middleware {$name} not exist");
+                throw new \RuntimeException("middleware $name not exist");
             }
             $middlewareObj = new $middlewareClass();
             $route['middleware'] = $name;
@@ -139,8 +139,24 @@ class Route implements RouteContract{
                 return false;
             }
 
-            if(!self::handleMiddleware($route)){
-                return false;
+            if ($route['middleware']) {
+                $middlewares = explode(',', $route['middleware']);
+                foreach ($middlewares as $middleware) {
+                    if (!in_array($middleware, self::$middlewares, true)) {
+                        throw new RouteException("Middleware '$middleware' is not registered", 500);
+                    }
+                    $middlewareClass = self::$middlewares[] = $middleware;
+                    $pathMiddleware = 'App\Http\Middlewares\\' . $middlewareClass;
+                    $middlewareObj = new $pathMiddleware();
+                    $middlewareObj->handle();
+
+                    if($middlewareObj->handle() !== true){
+                        return false;
+                    }
+                    // if ($middlewareObj->shouldAbort()) {
+                    //     return false;
+                    // }
+                }
             }
 
             if (is_callable($route['handler'])) {
