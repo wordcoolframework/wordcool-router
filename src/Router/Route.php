@@ -101,6 +101,7 @@ class Route implements RouteContract{
             if(!class_exists($middlewareClass)){
                 throw new \RuntimeException("middleware $name not exist");
             }
+
             $middlewareObj = new $middlewareClass();
             $route['middleware'] = $name;
         }
