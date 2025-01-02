@@ -5,9 +5,12 @@ namespace Router\Commands;
 use CommandStyle\CommandStyle;
 use Router\Route;
 
-final class RouteListCommand extends CommandStyle{
+final class RouteListCommand extends CommandStyle {
 
-    public static function handle() : void{
+    public string $commandName = 'route:list';
+
+    public static function handle() : void {
+
         $routes = Route::all();
 
         if (empty($routes)) {
@@ -31,9 +34,9 @@ final class RouteListCommand extends CommandStyle{
             echo self::paddedColor($route['method'],['bright_green', 'bold'], 15);
             echo self::paddedColor($route['request_method'], ['bright_yellow', 'bold'],20);
             echo self::paddedColor($route['url'],['bright_white','bold'],30);
-            echo str_pad(is_string($route['handler']) ? $route['handler'] : 'Closure', 30);
-            echo str_pad($route['middleware'] ?? 'None', 20);
-            echo str_pad($route['name'] ?? 'None', 20);
+            echo self::paddedColor(is_string($route['handler']) ? $route['handler'] : 'Closure',['bright_cyan','bold'], 30);
+            echo self::paddedColor($route['middleware'] ?? '---',['bright_purple', 'bold'], 20);
+            echo self::paddedColor($route['name'] ?? '---', ['bright_blue', 'bold'], 20);
             echo PHP_EOL;
         }
 

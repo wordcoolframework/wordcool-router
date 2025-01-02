@@ -1,6 +1,7 @@
 <?php
 
 require_once 'vendor/autoload.php';
+
 use App\Http\Controllers\SimpleController;
 
 use Router\Route;

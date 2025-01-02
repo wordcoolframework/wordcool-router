@@ -1,0 +1,22 @@
+#!/usr/bin/env php
+<?php
+
+use Router\Command;
+use Router\Commands\RouteListCommand;
+use Router\Commands\RouteTableCommand;
+
+require_once 'vendor/autoload.php';
+require_once 'index.php';
+
+$commandNamespace = 'Router\\Commands';
+$commandDirectory = __DIR__ . '/src/Router/Commands';
+
+Command::registerAllCommands($commandNamespace, $commandDirectory);
+
+$command =  $argv[1] ?? null;
+
+if($command){
+    Command::run($command);
+}else{
+    echo "CommandStyle not found.\n";
+}

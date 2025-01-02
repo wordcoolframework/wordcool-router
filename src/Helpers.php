@@ -23,3 +23,9 @@ if (!function_exists('resJson')) {
     }
 
 }
+
+if(!function_exists('root')){
+    function root(): string {
+        return dirname(__DIR__, 2);
+    }
+}

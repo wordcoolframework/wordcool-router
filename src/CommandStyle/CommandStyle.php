@@ -47,9 +47,10 @@ class CommandStyle{
         return "\033[" . $ansiCode . "m" . $text . "\033[0m";
     }
 
+
     /**
      * @param string $text
-     * @param string $color
+     * @param array $styles
      * @param int $width
      * @param string $padString
      * @param int $padType
@@ -126,6 +127,79 @@ class CommandStyle{
 
         echo $divider . PHP_EOL;
     }
+    /**
+     * Print text with a box around it
+     *
+     * @param string $text
+     * @param int $padding
+     * @return void
+     */
+    public static function box(string $text, int $padding = 1): void{
+        $lineLength = strlen($text) + ($padding * 2) + 4;
+        self::hr($lineLength, '*');
+        echo '*' . str_repeat(' ', $lineLength - 2) . '*' . PHP_EOL;
 
+        echo '* ' . str_repeat(' ', $padding) . $text . str_repeat(' ', $padding) . ' *' . PHP_EOL;
+
+        echo '*' . str_repeat(' ', $lineLength - 2) . '*' . PHP_EOL;
+        self::hr($lineLength, '*');
+    }
+
+    /**
+     * Print bold text
+     *
+     * @param string $text
+     * @return void
+     */
+    public static function bold(string $text): void{
+        echo "\033[1m" . $text . "\033[0m" . PHP_EOL;
+    }
+
+    /**
+     * Print text with underline
+     *
+     * @param string $text
+     * @return void
+     */
+    public static function underline(string $text): void{
+        echo "\033[4m" . $text . "\033[0m" . PHP_EOL;
+    }
+
+    /**
+     * Center-align text within a given width
+     *
+     * @param string $text
+     * @param int $width
+     * @return void
+     */
+    public static function center(string $text, int $width = 80): void{
+        $padding = max(0, ($width - strlen($text)) / 2);
+        echo str_repeat(' ', (int)$padding) . $text . PHP_EOL;
+    }
+
+    /**
+     * Right-align text within a given width
+     *
+     * @param string $text
+     * @param int $width
+     * @return void
+     */
+    public static function right(string $text, int $width = 80): void{
+        $padding = max(0, $width - strlen($text));
+        echo str_repeat(' ', $padding) . $text . PHP_EOL;
+    }
+
+    /**
+     * Print a list with bullet points
+     *
+     * @param array $items
+     * @param string $bullet
+     * @return void
+     */
+    public static function list(array $items, string $bullet = '-'): void{
+        foreach ($items as $item) {
+            echo "$bullet $item" . PHP_EOL;
+        }
+    }
 
 }
