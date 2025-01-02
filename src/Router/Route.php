@@ -50,6 +50,7 @@ class Route implements RouteContract{
     }
 
     public static function addRoute($url, $handler, $method, $requestMethod, $middleware = null) :self {
+
         self::$routes[] = array(
             'url'               => $url,
             'handler'           => $handler,

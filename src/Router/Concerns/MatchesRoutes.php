@@ -6,13 +6,17 @@ trait MatchesRoutes {
 
     public static function matchRoute($uri, $method, &$matches){
 
+        $uri = trim($uri, '/');
+
         foreach (self::$routes as $route) {
+
+            $routeUrl = trim($route['url'], '/');
 
             if (!self::isRequestMethodMatching($route, $method)) {
                 continue;
             }
 
-            $pattern = self::generateRoutePattern($route['url']);
+            $pattern = self::generateRoutePattern($routeUrl);
 
             if (self::matchUriWithPattern($pattern, $uri, $matches)) {
 
@@ -31,6 +35,7 @@ trait MatchesRoutes {
     }
 
     private static function generateRoutePattern($url){
+        $url = rtrim($url, '/');
         $pattern = preg_replace('/:([a-zA-Z0-9_-]+)/', '([a-zA-Z0-9_-]+)', $url);
         return '#^' . $pattern . '$#';
     }

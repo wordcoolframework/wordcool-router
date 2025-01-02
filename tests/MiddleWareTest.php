@@ -17,8 +17,8 @@ class MiddleWareTest extends TestCase {
             }
         };
 
-        \Router\Route::middleware('Auth', function (){
-            \Router\Route::get('test', function (){
+        \Router\Route::middleware('Auth', static function (){
+            \Router\Route::get('test', static function (){
                 echo "Passeed";
             });
         });

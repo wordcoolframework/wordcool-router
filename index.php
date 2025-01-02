@@ -11,12 +11,15 @@ use Router\Route;
 //        'data' => req()->get('test')
 //    ]200);
 //});
+Route::get('get-users', static function(){
+   echo "get users";
+});
 
 Route::get('/', static function(){
     (new SimpleController())->index();
 })->name('home');
 
-Route::get('/post/:id/comments/:comment', static function (int $postId, string $commentId) {
+Route::get('post/:id/comments/:comment', static function (int $postId, string $commentId) {
     echo "Post id : $postId and Commend id: $commentId";
 });
 

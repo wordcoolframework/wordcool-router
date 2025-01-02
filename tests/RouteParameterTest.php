@@ -11,7 +11,7 @@ class RouteParameterTest extends \PHPUnit\Framework\TestCase{
 
     public function testRouteWithParameters(){
 
-        \Router\Route::get('/param/:id', function ($id){
+        \Router\Route::get('/param/:id', static function ($id){
             echo "User ID: $id";
         });
 
