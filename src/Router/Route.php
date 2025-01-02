@@ -64,6 +64,10 @@ class Route implements RouteContract{
         return new self;
     }
 
+    public static function all() : ? array{
+        return self::$routes;
+    }
+
     public static function name($routeName) : self {
         if (isset(self::$lastAddedRoute) && is_array(self::$lastAddedRoute)) {
             self::$lastAddedRoute['name'] = $routeName;
@@ -116,6 +120,10 @@ class Route implements RouteContract{
     }
 
     public static function dispatch() :bool{
+
+        if (php_sapi_name() === 'cli') {
+            return false;
+        }
 
         $uri    = $_SERVER['REQUEST_URI'];
         $method = $_SERVER['REQUEST_METHOD'];

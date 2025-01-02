@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use Router\Route;
 
-class HomeController{
+class HomeController {
 
-    public function index(int $id){
-        echo "index page {$id}";
+    public function index(int $id)  {
+        echo $id;
     }
 
     public function redirect(){

@@ -6,8 +6,12 @@
         "psr-4": {
             "Router\\": "src/Router/",
             "Configuration\\": "src/Configuration/",
+            "CommandStyle\\": "src/CommandStyle/",
             "App\\": "App/"
-        }
+        },
+        "files": [
+            "src/Helpers.php"
+        ]
     },
     "authors": [
         {
@@ -23,7 +27,8 @@
         "test": "phpunit"
     },
     "require": {
-        "php": ">=7.4"
+        "php": ">=7.4",
+        "illuminate/http": "^11.36"
     },
     "minimum-stability": "dev",
     "prefer-stable": true

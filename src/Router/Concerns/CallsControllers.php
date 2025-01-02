@@ -7,10 +7,10 @@ use Router\Exceptions\RouteException;
 
 trait CallsControllers{
 
-    public static function callControllerMethod(string $handler, $params) :void{
+    public static function callControllerMethod(string $handler, $params) : void {
 
         $handlerParts = self::brokeControllerAndMehod(
-            Config::get('app.ControllerPath'),
+            Config::get('app.ControllerMethodSeparation'),
             $handler
         );
 

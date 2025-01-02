@@ -1,0 +1,15 @@
+#!/usr/bin/env php
+<?php
+
+use Router\Route;
+
+require_once 'vendor/autoload.php';
+require_once 'index.php';
+
+$command =  $argv[1] ?? null;
+
+if($command === 'route:list'){
+    \Router\Commands\RouteListCommand::handle();
+}else{
+    echo "CommandStyle not found.\n";
+}

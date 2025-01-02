@@ -42,7 +42,7 @@ trait MatchesRoutes {
     private static function extractQueryParameters($uri, &$matches){
         array_shift($matches); // Remove the full match
 
-        $queryString = parse_url($uri, PHP_URL_QUERY);
+        $queryString = parse_url($uri, PHP_URL_QUERY) ?? '';
         parse_str($queryString, $queryParams);
         $matches[] = $queryParams; // Add query parameters
     }

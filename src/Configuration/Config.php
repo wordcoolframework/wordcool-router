@@ -6,9 +6,9 @@ final class Config {
 
     protected static array $config = [];
 
-    public static function get(string $key, string|int $default = null){
+    public static function get(string $key, string|int|null $default = null){
 
-        $parts = self::separationFileAndKey(".", $key);
+        $parts = self::separationFileAndKey($key, ".");
 
 //        example : app.platform  => app is file | platform in key config
         if (self::countSeparationPartsIsTwo($parts)) {
@@ -34,12 +34,12 @@ final class Config {
 
 
     private static function separationFileAndKey(
-        string $character = ".", string $key
-    ) : ? array {
+        string $key, string $character = "."
+    ) : ?array {
         return explode($character, $key);
     }
 
-    private static function countSeparationPartsIsTwo(?array $parts){
+    private static function countSeparationPartsIsTwo(?array $parts) : bool{
         return count($parts) === 2;
     }
 

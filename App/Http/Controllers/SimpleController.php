@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-class SimpleController
-{
+final class SimpleController {
 
-    public function index(){
+    public function index() : void {
+
         echo "index page simple controller";
+
     }
 
 }
