@@ -23,7 +23,8 @@ class RouteTableCommand extends CommandStyle {
         foreach ($routes as $route) {
             $routeRow[] = [
                 $route['request_method'],
-                $route['url'], is_string($route['handler']) ? $route['handler'] : 'Closure',
+                $route['url'] !== "" ? $route['url'] : '/',
+                is_string($route['handler']) ? $route['handler'] : 'Closure',
                 $route['middleware'] ?? '-',
                 $route['name'] ?? '-'
             ];

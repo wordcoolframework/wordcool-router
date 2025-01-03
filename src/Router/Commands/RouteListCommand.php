@@ -33,7 +33,7 @@ final class RouteListCommand extends CommandStyle {
         foreach ($routes as $route) {
             echo self::paddedColor($route['method'],['bright_green', 'bold'], 15);
             echo self::paddedColor($route['request_method'], ['bright_yellow', 'bold'],20);
-            echo self::paddedColor($route['url'],['bright_white','bold'],30);
+            echo self::paddedColor($route['url'] !== "" ? $route['url'] : '/',['bright_white','bold'],30);
             echo self::paddedColor(is_string($route['handler']) ? $route['handler'] : 'Closure',['bright_cyan','bold'], 30);
             echo self::paddedColor($route['middleware'] ?? '---',['bright_purple', 'bold'], 20);
             echo self::paddedColor($route['name'] ?? '---', ['bright_blue', 'bold'], 20);

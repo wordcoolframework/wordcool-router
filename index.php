@@ -6,11 +6,24 @@ use App\Http\Controllers\SimpleController;
 
 use Router\Route;
 
+
+Route::prefix('admin', static function () {
+
+    Route::get('users', 'AdminController@index');
+
+    Route::post('create','AdminController@create');
+
+});
+
+
+
 //Route::get('/', static function () : \Illuminate\Contracts\Support\Jsonable{
 //    return resJson([
 //        'data' => req()->get('test')
 //    ]200);
 //});
+
+
 Route::get('get-users', static function(){
    echo "get users";
 });

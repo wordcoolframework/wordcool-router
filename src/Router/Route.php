@@ -18,6 +18,7 @@ class Route implements RouteContract{
     private static array $middlewares = [];
     private static $lastAddedRoute;
     private static $fallback;
+    private static ?string $currentPrefix = null;
 
     public static function get($url, $handler, $method = 'GET', $middleware = null) :self {
         self::addRoute($url, $handler, $method, 'GET', $middleware);
@@ -50,6 +51,8 @@ class Route implements RouteContract{
     }
 
     public static function addRoute($url, $handler, $method, $requestMethod, $middleware = null) :self {
+
+        $url = rtrim(self::$currentPrefix . '/' . trim($url, '/'), '/');
 
         self::$routes[] = array(
             'url'               => $url,
@@ -119,6 +122,30 @@ class Route implements RouteContract{
     public static function addMiddleware($middleware) :void{
         self::$middlewares[] = $middleware;
     }
+
+    public static function prefix(string $prefix, callable $callback): void {
+        $previousPrefix = self::$currentPrefix;
+
+        self::$currentPrefix = rtrim($previousPrefix . '/' . trim($prefix, '/'), '/');
+
+        $callback();
+
+        self::$currentPrefix = $previousPrefix;
+    }
+
+    public static function limit(int $maxAttempts, int $decaySeconds): self {
+        if (!isset(self::$lastAddedRoute)) {
+            throw new \RuntimeException("No route available to apply rate limit.");
+        }
+
+        $routeKey = md5(self::$lastAddedRoute['url'] . self::$lastAddedRoute['request_method']);
+        RateLimiter::addLimit($routeKey, $maxAttempts, $decaySeconds);
+
+        self::$lastAddedRoute['rate_limit'] = $routeKey;
+
+        return new self;
+    }
+
 
     public static function dispatch() :bool{
 
