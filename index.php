@@ -1,5 +1,6 @@
 <?php
 session_start();
+
 require_once 'vendor/autoload.php';
 
 use App\Http\Controllers\SimpleController;
@@ -8,6 +9,10 @@ use Router\Route;
 
 
 Route::prefix('admin', static function () {
+
+    Route::get('/', static function(){
+       echo "index page in admin";
+    });
 
     Route::get('users', 'AdminController@index');
 

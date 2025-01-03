@@ -145,6 +145,10 @@ class Route implements RouteContract{
 
     public static function dispatch() :bool{
 
+        if (PHP_SAPI === 'cli') {
+            return false;
+        }
+
         $uri    = $_SERVER['REQUEST_URI'];
         $method = $_SERVER['REQUEST_METHOD'];
 

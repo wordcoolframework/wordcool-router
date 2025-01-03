@@ -12,9 +12,10 @@ $commandDirectory = __DIR__ . '/src/Router/Commands';
 Command::registerAllCommands($commandNamespace, $commandDirectory);
 
 $command =  $argv[1] ?? null;
+$argument = $argv[2] ?? null;
 
 if($command){
-    Command::run($command);
+    Command::run($command, $argument);
 }else{
     echo "Command not found.\n";
 }

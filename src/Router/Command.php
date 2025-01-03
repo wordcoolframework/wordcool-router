@@ -21,11 +21,11 @@ final class Command {
         }
     }
 
-    public static function run(string $command) : void {
+    public static function run(string $command, string|int|null $argument = null) : void {
         foreach (self::$commands as $commandClass){
             $commandName = (new $commandClass);
             if (strtolower($command) === $commandName->commandName) {
-                $commandClass::handle();
+                $commandClass::handle($argument);
                 return;
             }
         }
