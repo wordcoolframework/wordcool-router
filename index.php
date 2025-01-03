@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 require_once 'vendor/autoload.php';
 
 use App\Http\Controllers\SimpleController;
@@ -24,9 +24,12 @@ Route::prefix('admin', static function () {
 //});
 
 
+
 Route::get('get-users', static function(){
    echo "get users";
-});
+})->limiter(3,60);
+
+
 
 Route::get('/', static function(){
     (new SimpleController())->index();

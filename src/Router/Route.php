@@ -133,25 +133,17 @@ class Route implements RouteContract{
         self::$currentPrefix = $previousPrefix;
     }
 
-    public static function limit(int $maxAttempts, int $decaySeconds): self {
-        if (!isset(self::$lastAddedRoute)) {
-            throw new \RuntimeException("No route available to apply rate limit.");
-        }
+    public function limiter(int $limit, int $seconds) : self{
+        self::$lastAddedRoute['rate_limit'] = [
+            'limit' => $limit,
+            'seconds' => $seconds
+        ];
 
-        $routeKey = md5(self::$lastAddedRoute['url'] . self::$lastAddedRoute['request_method']);
-        RateLimiter::addLimit($routeKey, $maxAttempts, $decaySeconds);
-
-        self::$lastAddedRoute['rate_limit'] = $routeKey;
-
-        return new self;
+        return $this;
     }
 
 
     public static function dispatch() :bool{
-
-        if (php_sapi_name() === 'cli') {
-            return false;
-        }
 
         $uri    = $_SERVER['REQUEST_URI'];
         $method = $_SERVER['REQUEST_METHOD'];
@@ -174,6 +166,16 @@ class Route implements RouteContract{
                     call_user_func(self::$fallback);
                 }
                 return false;
+            }
+
+            if (isset($route['rate_limit'])) {
+                $rateLimit = $route['rate_limit'];
+                $rateLimitKey = $method . $uri;
+                if (!RateLimiter::hit($rateLimitKey, $rateLimit['limit'], $rateLimit['seconds'])) {
+                    http_response_code(429);
+                    echo "Too many requests. Please try again later.";
+                    return false;
+                }
             }
 
             if ($route['middleware']) {

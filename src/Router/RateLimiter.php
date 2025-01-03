@@ -2,50 +2,32 @@
 
 namespace Router;
 
-class RateLimiter {
+class RateLimiter
+{
+    private static int $limit = 5;
+    private static int $seconds = 60;
 
-    private static array $requestCounts = [];
-    private static array $rateLimits = [];
-
-    public static function addLimit(string $key, int $maxAttempts, int $decaySeconds): void {
-        self::$rateLimits[$key] = [
-            'maxAttempts'   => $maxAttempts,
-            'decaySeconds'  => $decaySeconds,
-        ];
-    }
-
-    public static function hit(string $key): bool {
+    public static function hit(string $key, int $limit = 5, int $seconds = 60): bool
+    {
         $currentTime = time();
 
-        if (!isset(self::$requestCounts[$key])) {
-            self::$requestCounts[$key] = [
-                'attempts' => 0,
-                'expiresAt' => $currentTime + self::$rateLimits[$key]['decaySeconds'],
-            ];
+        self::$limit = $limit;
+        self::$seconds = $seconds;
+
+        if (!isset($_SESSION['requests'][$key])) {
+            $_SESSION['requests'][$key] = [];
         }
 
-        $rateLimit = self::$rateLimits[$key];
-        $requestInfo = &self::$requestCounts[$key];
+        $_SESSION['requests'][$key] = array_filter($_SESSION['requests'][$key], function ($timestamp) use ($currentTime) {
+            return ($currentTime - $timestamp) <= self::$seconds;
+        });
 
-        if ($currentTime > $requestInfo['expiresAt']) {
-            $requestInfo['attempts'] = 0;
-            $requestInfo['expiresAt'] = $currentTime + $rateLimit['decaySeconds'];
+        $_SESSION['requests'][$key][] = $currentTime;
+
+        if (count($_SESSION['requests'][$key]) > self::$limit) {
+            return false;
         }
 
-        if ($requestInfo['attempts'] < $rateLimit['maxAttempts']) {
-            $requestInfo['attempts']++;
-            return true; // Allow the request
-        }
-
-        return false; // Rate limit exceeded
+        return true;
     }
-
-    public static function remaining(string $key): int {
-        return self::$rateLimits[$key]['maxAttempts'] - (self::$requestCounts[$key]['attempts'] ?? 0);
-    }
-
-    public static function reset(string $key): void {
-        unset(self::$requestCounts[$key]);
-    }
-
 }
