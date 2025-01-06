@@ -32,3 +32,13 @@ if(!function_exists('root')){
 
     }
 }
+
+if(!function_exists('getRoutesFile')){
+
+    function getRoutesFile(string $path) : string{
+
+        return getcwd() . "/$path.php";
+
+    }
+
+}

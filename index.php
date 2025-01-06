@@ -35,7 +35,6 @@ Route::get('get-users', static function(){
 })->limiter(3,60);
 
 
-
 Route::get('/', static function(){
     (new SimpleController())->index();
 })->name('home');

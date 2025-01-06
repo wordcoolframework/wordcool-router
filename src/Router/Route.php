@@ -152,7 +152,7 @@ class Route implements RouteContract{
         $uri    = $_SERVER['REQUEST_URI'];
         $method = $_SERVER['REQUEST_METHOD'];
 
-        if(Config::get('app.platform') === 'wordpress'){
+        if(Config::get('app.Platform') === 'wordpress'){
             if (
                 str_contains($uri, 'wp-login')
                 ||

@@ -56,8 +56,8 @@ final class Config {
         return $part;
     }
 
-    private static function getConfigPath(string $file) : ? string{
-        return $_SERVER['DOCUMENT_ROOT'] . "/src/Router/config/$file.php";
+    private static function getConfigPath(string $file) : ? string {
+        return getcwd() . "/config/$file.php";
     }
 
 }

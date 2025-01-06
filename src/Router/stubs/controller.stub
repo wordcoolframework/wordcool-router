@@ -1,0 +1,13 @@
+<?php
+
+namespace App\Http\Controllers;
+
+class {{ControllerName}} {
+
+    public function index() {
+
+        echo "This is the index method of {{ControllerName}}.";
+
+    }
+
+}

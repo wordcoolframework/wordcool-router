@@ -1,13 +1,15 @@
 #!/usr/bin/env php
 <?php
 
+use Configuration\Config;
 use Router\Command;
 
 require_once 'vendor/autoload.php';
-require_once 'index.php';
 
-$commandNamespace = 'Router\\Commands';
-$commandDirectory = __DIR__ . '/src/Router/Commands';
+require_once getRoutesFile(Config::get('app.RoutesFile'));
+
+$commandNamespace = Config::get('app.CommandNamespace');
+$commandDirectory = __DIR__ . Config::get('app.CommandDirectory');
 
 Command::registerAllCommands($commandNamespace, $commandDirectory);
 
@@ -17,5 +19,5 @@ $argument = $argv[2] ?? null;
 if($command){
     Command::run($command, $argument);
 }else{
-    echo "Command not found.\n";
+    throw new RuntimeException ("Command not found.\n");
 }
