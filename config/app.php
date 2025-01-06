@@ -11,14 +11,14 @@ return [
     'MiddlewarePath'                => "App\Http\Middlewares\\",
 
     // if you use Routing With Call Controller you should Separation Method and Controller
-    'ControllerMethodSeparation'    => '@',
+    'ControllerMethodSeparation'    => "@",
 
     // Set Base Routes File
-    'RoutesFile'                    => 'index',
+    'RoutesFile'                    => "index",
 
     // Set Command Namespace for Register All Commands
-    'CommandNamespace'              => 'Router\\Commands',
+    'CommandNamespace'              => "Router\\Commands",
 
     // Set Command Directory for Register All Commands
-    'CommandDirectory'              => '/src/Router/Commands'
+    'CommandDirectory'              => "/src/Router/Commands",
 ];
