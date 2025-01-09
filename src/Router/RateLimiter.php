@@ -18,7 +18,7 @@ class RateLimiter
             $_SESSION['requests'][$key] = [];
         }
 
-        $_SESSION['requests'][$key] = array_filter($_SESSION['requests'][$key], function ($timestamp) use ($currentTime) {
+        $_SESSION['requests'][$key] = array_filter($_SESSION['requests'][$key], static function ($timestamp) use ($currentTime) {
             return ($currentTime - $timestamp) <= self::$seconds;
         });
 

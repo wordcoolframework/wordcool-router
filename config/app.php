@@ -4,6 +4,9 @@ return [
     // if you use and This Router in WordPress when login in admin panel de Active routing system
     'Platform'                      => "wordpress", // or php-pure
 
+    // Define the parameter format for routes
+    'RouteParameterFormat' => ':param', // Options: ":param" or "{param}"
+
     // set Controller Classes Path
     'ControllerPath'                => "App\\Http\\Controllers\\",
 
@@ -21,4 +24,8 @@ return [
 
     // Set Command Directory for Register All Commands
     'CommandDirectory'              => "/src/Router/Commands",
+
+    // Set Stubs Directory
+    'StubsDirectory'                => "/src/Router/stubs",
+
 ];

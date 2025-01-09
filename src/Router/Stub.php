@@ -2,6 +2,7 @@
 
 namespace Router;
 
+use Configuration\Config;
 use Exception;
 
 class Stub {
@@ -11,14 +12,15 @@ class Stub {
      */
     public static function get(string $stub_name) : string {
 
-        $exist = getcwd() . "/src/Router/stubs/$stub_name.stub";
+        $stubDirectory = getcwd() . Config::get('StubsDirectory', '/src/Router/stubs');
+        $stubPath = $stubDirectory . "/$stub_name.stub";
 
-        if (!$exist){
+        if (!$stubPath){
             throw new \RuntimeException("Stub File $stub_name not found");
 
         }
 
-        return $exist;
+        return $stubPath;
 
     }
 

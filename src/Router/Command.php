@@ -10,7 +10,10 @@ final class Command {
        self::$commands[] = $className;
     }
 
-    public static function registerAllCommands(string $commandNamespace, string $commandDirectory): void {
+    public static function registerAllCommands(
+        string $commandNamespace,
+        string $commandDirectory
+    ): void {
         $files = glob($commandDirectory . '/*.php');
 
         foreach ($files as $file) {
