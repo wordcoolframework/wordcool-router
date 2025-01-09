@@ -5,7 +5,7 @@ return [
     'Platform'                      => "wordpress", // or php-pure
 
     // Define the parameter format for routes
-    'RouteParameterFormat' => ':param', // Options: ":param" or "{param}"
+    'RouteParameterFormat'          => ':param', // Options: ":param" or "{param}"
 
     // set Controller Classes Path
     'ControllerPath'                => "App\\Http\\Controllers\\",

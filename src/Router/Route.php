@@ -61,6 +61,7 @@ class Route implements RouteContract{
             'request_method'    => $requestMethod,
             'middleware'        => $middleware,
             'name'              => null,
+            'validators'        => [],
         );
 
         self::$lastAddedRoute = &self::$routes[count(self::$routes) - 1];
@@ -142,6 +143,42 @@ class Route implements RouteContract{
         return $this;
     }
 
+    public function validate(array $rules): self {
+        if (!isset(self::$lastAddedRoute)) {
+            throw new Exception("No route available to add validation.");
+        }
+        self::$lastAddedRoute['validators'] = $rules;
+        return $this;
+    }
+
+    private static function validateParameters(array $params, array $rules): bool|string {
+        $namedParams = [];
+        foreach ($rules as $key => $type) {
+            $namedParams[$key] = $params[array_search($key, array_keys($rules))];
+        }
+        foreach ($rules as $key => $type) {
+            if (!isset($namedParams[$key])) {
+                return "Missing parameter: $key";
+            }
+
+            $value = $namedParams[$key];
+            switch ($type) {
+                case 'int':
+                    if (!is_numeric($value)) {
+                        return "Parameter '$key' must be an integer.";
+                    }
+                    break;
+                case 'string':
+                    if (!is_string($value) || ctype_digit($value)) {
+                        return "Parameter '$key' must be a string.";
+                    }
+                    break;
+                default:
+                    return "Unsupported validation type: $type";
+            }
+        }
+        return true;
+    }
 
     public static function dispatch() :bool{
 
@@ -200,6 +237,13 @@ class Route implements RouteContract{
                     //     return false;
                     // }
                 }
+            }
+
+            $validationResult = self::validateParameters($matches, $route['validators']);
+            if ($validationResult !== true) {
+                http_response_code(400);
+                echo $validationResult;
+                return false;
             }
 
             if (is_callable($route['handler'])) {

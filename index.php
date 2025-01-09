@@ -41,7 +41,10 @@ Route::get('/', static function(){
 
 Route::get('post/:id/comments/:comment', static function (int $postId, string $commentId) {
     echo "Post id : $postId and Commend id: $commentId";
-});
+})->validate([
+    'id'        => 'int',
+    'comment'   => 'string'
+]);
 
 Route::addMiddleware('Auth');
 

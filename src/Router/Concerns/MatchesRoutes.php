@@ -2,6 +2,8 @@
 
 namespace Router\Concerns;
 
+use Configuration\Config;
+
 trait MatchesRoutes {
 
     public static function matchRoute($uri, $method, &$matches){
@@ -36,7 +38,17 @@ trait MatchesRoutes {
 
     private static function generateRoutePattern($url){
         $url = rtrim($url, '/');
-        $pattern = preg_replace('/:([a-zA-Z0-9_-]+)/', '([a-zA-Z0-9_-]+)', $url);
+
+        $parameterFormat = Config::get('app.RouteParameterFormat', ':param');
+
+        if ($parameterFormat === ':param') {
+            $pattern = preg_replace('/:([a-zA-Z0-9_-]+)/', '([a-zA-Z0-9_-]+)', $url);
+        } elseif ($parameterFormat === '{param}') {
+            $pattern = preg_replace('/{([a-zA-Z0-9_-]+)}/', '([a-zA-Z0-9_-]+)', $url);
+        } else {
+            throw new \Exception("Invalid parameter format in configuration.");
+        }
+
         return '#^' . $pattern . '$#';
     }
 
