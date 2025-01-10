@@ -151,6 +151,17 @@ class Route implements RouteContract{
         return $this;
     }
 
+    public function activeBetween(string $startTime, string $endTime): self {
+        if (!isset(self::$lastAddedRoute)) {
+            throw new \RuntimeException("No route available to set active time range.");
+        }
+        self::$lastAddedRoute['active_between'] = [
+            'start' => $startTime,
+            'end' => $endTime,
+        ];
+        return $this;
+    }
+
     private static function validateParameters(array $params, array $rules): bool|string {
         $namedParams = [];
         foreach ($rules as $key => $type) {
@@ -236,6 +247,18 @@ class Route implements RouteContract{
                     // if ($middlewareObj->shouldAbort()) {
                     //     return false;
                     // }
+                }
+            }
+
+            if (isset($route['active_between'])) {
+                $currentTime = date('Y-m-d H:i:s');
+                $startTime = $route['active_between']['start'];
+                $endTime = $route['active_between']['end'];
+
+                if ($currentTime < $startTime || $currentTime > $endTime) {
+                    http_response_code(404);
+                    echo "Route is inactive.";
+                    return false;
                 }
             }
 

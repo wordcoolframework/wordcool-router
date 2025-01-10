@@ -31,13 +31,17 @@ Route::prefix('admin', static function () {
 
 
 Route::get('get-users', static function(){
-   echo "get users";
+    echo "get users";
 })->limiter(3,60);
 
 
 Route::get('/', static function(){
     (new SimpleController())->index();
-})->name('home');
+})->name('home')
+    ->activeBetween(
+        '2023-01-01 00:00:00',
+        '2023-01-10 23:59:59'
+    );
 
 Route::get('post/:id/comments/:comment', static function (int $postId, string $commentId) {
     echo "Post id : $postId and Commend id: $commentId";
