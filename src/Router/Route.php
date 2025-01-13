@@ -74,6 +74,32 @@ class Route implements RouteContract{
         return self::$routes;
     }
 
+    public static function localized($url, $handler) : self{
+
+        $languages = Config::get('localize.lang');
+
+        foreach ($languages as $lang) {
+            self::get("/$lang" . $url, $handler);
+        }
+
+        return new self;
+    }
+
+    public static function getCurrentLocalized() : ? string {
+
+        $uri = $_SERVER['REQUEST_URI'];
+
+        $languages = Config::get('localize.lang');
+
+        foreach ($languages as $lang) {
+            if (str_starts_with($uri, "/$lang")) {
+                return $lang;
+            }
+        }
+
+        return Config::get('localize.lang')[0];
+    }
+
     public static function name($routeName) : self {
         if (isset(self::$lastAddedRoute) && is_array(self::$lastAddedRoute)) {
             self::$lastAddedRoute['name'] = $routeName;

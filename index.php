@@ -8,15 +8,24 @@ use App\Http\Controllers\SimpleController;
 use Router\Route;
 
 
-Route::get('handle-middileware', static function (){
-    echo "Pass Middleware";
-})->closureMiddleware(
-    middleware: static function (
-        $request, $next
-    ){
-    if (1 !== 1) return $next($request);
-    return false;
-});
+Route::addMiddleware('Auth');
+
+
+
+Route::localized('/about',
+    'AboutController@index'
+);
+
+
+//Route::get('handle-middileware', static function (){
+//    echo "Pass Middleware";
+//})->closureMiddleware(
+//    middleware: static function (
+//        $request, $next
+//    ){
+//    if (1 !== 1) return $next($request);
+//    return false;
+//});
 
 Route::get('pass-middleware-with-class', static function (){
    echo "pass Auth middleware with class";
@@ -65,7 +74,6 @@ Route::get('post/:id/comments/:comment', static function (int $postId, string $c
     'comment'   => 'string'
 ]);
 
-Route::addMiddleware('Auth');
 
 Route::get("/asd", static function (){
    echo "asdfaf";
