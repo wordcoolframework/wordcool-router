@@ -19,6 +19,7 @@ class Route implements RouteContract{
     private static $lastAddedRoute;
     private static $fallback;
     private static ?string $currentPrefix = null;
+    private static ?array $currentRoute = null;
 
     public static function get($url, $handler, $method = 'GET', $middleware = null) :self {
         self::addRoute($url, $handler, $method, 'GET', $middleware);
@@ -116,6 +117,20 @@ class Route implements RouteContract{
         }
     }
 
+    public function closureMiddleware(callable $middleware) : self {
+        if (!isset(self::$lastAddedRoute)) {
+            throw new \RuntimeException("No route available to attach middleware.");
+        }
+
+        if (!isset(self::$lastAddedRoute['middleware'])) {
+            self::$lastAddedRoute['middleware'] = [];
+        }
+
+        self::$lastAddedRoute['middleware'][] = $middleware;
+
+        return $this;
+    }
+
     public static function fallback(callable $handler) :void{
         self::$fallback = $handler;
     }
@@ -160,6 +175,24 @@ class Route implements RouteContract{
             'end' => $endTime,
         ];
         return $this;
+    }
+
+    public static function current() : ? array {
+        return self::$currentRoute['route'] ?? null;
+    }
+
+    public static function currentRouteName() : ? string {
+        return self::$currentRoute['route']['name'] ?? null;
+    }
+
+    public static function currentRouteAction(): ?string {
+        $handler = self::$currentRoute['route']['handler'] ?? null;
+
+        if (is_callable($handler) && $handler instanceof \Closure) {
+            return 'closure';
+        }
+
+        return is_string($handler) ? $handler : null;
     }
 
     private static function validateParameters(array $params, array $rules): bool|string {
@@ -220,6 +253,11 @@ class Route implements RouteContract{
                 return false;
             }
 
+            self::$currentRoute = [
+                'route' => $route,
+                'matches' => $matches,
+            ];
+
             if (isset($route['rate_limit'])) {
                 $rateLimit = $route['rate_limit'];
                 $rateLimitKey = $method . $uri;
@@ -231,24 +269,58 @@ class Route implements RouteContract{
             }
 
             if ($route['middleware']) {
-                $middlewares = explode(',', $route['middleware']);
-                foreach ($middlewares as $middleware) {
-                    if (!in_array($middleware, self::$middlewares, true)) {
-                        throw new RouteException("Middleware '$middleware' is not registered", 500);
-                    }
-                    $middlewareClass = self::$middlewares[] = $middleware;
-                    $pathMiddleware = 'App\Http\Middlewares\\' . $middlewareClass;
-                    $middlewareObj = new $pathMiddleware();
-                    $middlewareObj->handle();
+                if (is_callable($route['middleware'])) {
+                    // اگر middleware یک Closure باشد
+                    $middlewareClosure = $route['middleware'];
+                    $middlewareResponse = $middlewareClosure($_SERVER, function ($request) {
+                        return true;
+                    });
 
-                    if($middlewareObj->handle() !== true){
+                    if ($middlewareResponse !== true) {
                         return false;
                     }
-                    // if ($middlewareObj->shouldAbort()) {
-                    //     return false;
-                    // }
+                } elseif (is_array($route['middleware'])) {
+                    // اگر middleware یک آرایه باشد
+                    foreach ($route['middleware'] as $middleware) {
+                        if (is_callable($middleware)) {
+                            $middlewareResponse = $middleware($_SERVER, function ($request) {
+                                return true;
+                            });
+
+                            if ($middlewareResponse !== true) {
+                                return false;
+                            }
+                        } else {
+                            $middlewareClass = $middleware;
+                            $pathMiddleware = 'App\Http\Middlewares\\' . $middlewareClass;
+                            if (!class_exists($pathMiddleware)) {
+                                throw new \RuntimeException("Middleware class '$middlewareClass' not found.");
+                            }
+                            $middlewareObj = new $pathMiddleware();
+                            if ($middlewareObj->handle() !== true) {
+                                return false;
+                            }
+                        }
+                    }
+                } elseif (is_string($route['middleware'])) {
+                    // اگر middleware یک رشته باشد
+                    $middlewares = explode(',', $route['middleware']);
+                    foreach ($middlewares as $middleware) {
+                        $middlewareClass = trim($middleware);
+                        $pathMiddleware = 'App\Http\Middlewares\\' . $middlewareClass;
+                        if (!class_exists($pathMiddleware)) {
+                            throw new \RuntimeException("Middleware class '$middlewareClass' not found.");
+                        }
+                        $middlewareObj = new $pathMiddleware();
+                        if ($middlewareObj->handle() !== true) {
+                            return false;
+                        }
+                    }
+                } else {
+                    throw new \RuntimeException("Middleware must be a callable, an array of callables, or a comma-separated string.");
                 }
             }
+
 
             if (isset($route['active_between'])) {
                 $currentTime = date('Y-m-d H:i:s');

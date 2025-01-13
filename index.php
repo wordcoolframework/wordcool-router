@@ -8,6 +8,21 @@ use App\Http\Controllers\SimpleController;
 use Router\Route;
 
 
+Route::get('handle-middileware', static function (){
+    echo "Pass Middleware";
+})->closureMiddleware(
+    middleware: static function (
+        $request, $next
+    ){
+    if (1 !== 1) return $next($request);
+    return false;
+});
+
+Route::get('pass-middleware-with-class', static function (){
+   echo "pass Auth middleware with class";
+}, middleware: 'Auth');
+
+
 Route::prefix('admin', static function () {
 
     Route::get('/', static function(){
@@ -37,11 +52,11 @@ Route::get('get-users', static function(){
 
 Route::get('/', static function(){
     (new SimpleController())->index();
-})->name('home')
-    ->activeBetween(
-        '2023-01-01 00:00:00',
-        '2023-01-10 23:59:59'
-    );
+})->name('home');
+//    ->activeBetween(
+//        '2023-01-01 00:00:00',
+//        '2023-01-10 23:59:59'
+//    );
 
 Route::get('post/:id/comments/:comment', static function (int $postId, string $commentId) {
     echo "Post id : $postId and Commend id: $commentId";

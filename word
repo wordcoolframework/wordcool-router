@@ -16,8 +16,4 @@ Command::registerAllCommands($commandNamespace, $commandDirectory);
 $command =  $argv[1] ?? null;
 $argument = $argv[2] ?? null;
 
-if($command){
-    Command::run($command, $argument);
-}else{
-    throw new RuntimeException ("Command not found.\n");
-}
+Command::run($command, $argument);
