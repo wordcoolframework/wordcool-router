@@ -6,6 +6,7 @@
         "psr-4": {
             "Router\\": "src/Router/",
             "Configuration\\": "src/Configuration/",
+            "CoolView\\": "src/CoolView/",
             "CommandStyle\\": "src/CommandStyle/",
             "App\\": "App/"
         },

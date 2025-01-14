@@ -19,6 +19,9 @@ return [
     // Set Base Routes File
     'RoutesFile'                    => "index",
 
+    // set Lang Path
+    "LangPath"                      => '/lang/translate/',
+
     // Set Command Namespace for Register All Commands
     'CommandNamespace'              => "Router\\Commands",
 

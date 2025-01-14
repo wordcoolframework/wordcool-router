@@ -4,8 +4,10 @@
 return [
 
     'lang' =>  [
+
         'en',
         'fa'
+
     ]
 
 ];

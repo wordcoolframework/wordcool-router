@@ -1,5 +1,7 @@
 <?php
 
+use CoolView\CoolEngine;
+
 if (!function_exists('req')){
 
     function req(): \Illuminate\Http\Request{
@@ -14,10 +16,13 @@ if (!function_exists('resJson')) {
     function resJson(?array $data, $status_code = 200, $headers = []) {
 
         http_response_code($status_code);
+
         foreach ($headers as $key => $value) {
             header("$key: $value");
         }
+
         header("Content-Type: application/json");
+
         echo json_encode($data, true); exit();
 
     }
@@ -39,6 +44,32 @@ if(!function_exists('getRoutesFile')){
 
         return getcwd() . "/$path.php";
 
+    }
+
+}
+
+if (!function_exists('__')){
+
+    function __(string $key) : string {
+
+        $currentLang    = \Router\Route::getCurrentLocalized();
+
+        $translations = require getcwd() . "/lang/translate.php";
+
+        if (isset($translations[$currentLang][$key])) {
+
+            return $translations[$currentLang][$key];
+
+        }
+
+        return $key;
+    }
+}
+
+if(!function_exists('cool')){
+
+    function cool() : CoolEngine{
+        return new CoolEngine(getcwd() . '/template/views', getcwd() . '/template/caches');
     }
 
 }

@@ -3,7 +3,9 @@
 namespace CommandStyle;
 
 class CommandStyle{
+
     use Colors;
+
     /**
      * Print new lines for padding top/bottom
      * @param int $count
