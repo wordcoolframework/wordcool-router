@@ -2,11 +2,12 @@
 
 namespace CoolView;
 
+use CoolView\DTO\CoolEngineDTO;
+use CoolView\Patterns\Directive;
+
 final class CoolEngine {
 
-    private string $viewsPath;
-
-    private string $cachePath;
+    use Directive, CoolEngineDTO;
 
     public function __construct(string $viewsPath, string $cachePath){
         $this->viewsPath = rtrim($viewsPath, '/');
@@ -41,29 +42,53 @@ final class CoolEngine {
         file_put_contents($compiledFile, $compiledTemplate);
     }
 
+    public function startSection(string $name): void {
+        ob_start();
+        $this->sectionStack[] = $name;
+    }
+
+    public function endSection(): void {
+
+        if (empty($this->sectionStack)) {
+            throw new \RuntimeException("You must start a section before ending it.");
+        }
+
+        $name = array_pop($this->sectionStack);
+        $this->sections[$name] = ob_get_clean();
+    }
+
+    public function yieldSection(string $name): string {
+        return $this->sections[$name] ?? '';
+    }
+
+    public function extend(string $layout): void {
+        $this->layout = $layout;
+    }
+
+    public function clearCache(): void {
+        array_map('unlink', glob($this->cachePath . '/*.php'));
+    }
+
     private function parseDirectives(string $template): string {
-        // Replace variables {{ $var }}
-        $template = preg_replace('/\{\{\s*(.+?)\s*\}\}/', '<?php echo htmlspecialchars($1, ENT_QUOTES, \'UTF-8\'); ?>', $template);
+        $directives = self::get();
 
-        // Replace @if, @elseif, @else, @endif
-        $template = preg_replace('/@if\s*\((.+?)\)/', '<?php if ($1): ?>', $template);
-        $template = preg_replace('/@elseif\s*\((.+?)\)/', '<?php elseif ($1): ?>', $template);
-        $template = preg_replace('/@else/', '<?php else: ?>', $template);
-        $template = preg_replace('/@endif/', '<?php endif; ?>', $template);
-
-        // Replace @foreach, @endforeach
-        $template = preg_replace('/@foreach\s*\((.+?)\)/', '<?php foreach ($1): ?>', $template);
-        $template = preg_replace('/@endforeach/', '<?php endforeach; ?>', $template);
-
-        // Replace @for, @endfor
-        $template = preg_replace('/@for\s*\((.+?)\)/', '<?php for ($1): ?>', $template);
-        $template = preg_replace('/@endfor/', '<?php endfor; ?>', $template);
-
-        // Replace @while, @endwhile
-        $template = preg_replace('/@while\s*\((.+?)\)/', '<?php while ($1): ?>', $template);
-        $template = preg_replace('/@endwhile/', '<?php endwhile; ?>', $template);
+        foreach ($directives as $key => $callback) {
+            $pattern = "/@$key\\s*(?:\\((.+?)\\))?/";
+            $template = preg_replace_callback($pattern, static function ($matches) use ($callback) {
+                return $callback($matches[1] ?? null);
+            }, $template);
+        }
 
         return $template;
     }
 
+    public function view(string $view, array $data): string {
+        $content = $this->render($view, $data);
+
+        if ($this->layout) {
+            return $this->render($this->layout, array_merge($data, ['content' => $content]));
+        }
+
+        return $content;
+    }
 }

@@ -11,7 +11,6 @@ use Router\Route;
 Route::addMiddleware('Auth');
 
 
-
 Route::localized('/about',
     'AboutController@index'
 );
@@ -103,7 +102,7 @@ Route::middleware('Auth', static function (){
 });
 
 Route::fallback(static function (){
-   echo "404 - not found";
+    echo cool()->render('404');
 });
 
 Route::get('/all', static function(){

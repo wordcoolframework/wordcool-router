@@ -1,21 +1,22 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
+@extends('layout')
 
-    {{ $name }}
+@section('content')
 
-    @if($name !== 'arash')
+    <h2>{{ __('welcome') }}</h2>
+    <h3>currentLocalize is :{{ $currentLocalize }}</h3>
+
+    @istrue($isOk)
+        <p>The variable is true!</p>
+    @endif
+
+    @if($welcome !== 'welcome')
         <p>is arash</p>
     @else
         <p>is not arash</p>
     @endif
 
-</body>
-</html>
+    @isnull($family)
+        <p>family is null</p>
+    @endif
+
+@endsection
