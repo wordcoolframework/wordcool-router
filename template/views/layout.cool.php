@@ -9,7 +9,7 @@
 </head>
 <body>
     <p>start layout header</p>
-        @yield('content')
+        #yield('content')
     <p>end layout footer</p>
 </body>
 </html>

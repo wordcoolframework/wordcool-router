@@ -3,11 +3,6 @@
 
 return [
 
-    'lang' =>  [
-
-        'en',
-        'fa'
-
-    ]
+    'lang' =>  ['en', 'fa']
 
 ];

@@ -16,6 +16,9 @@ return [
     // if you use Routing With Call Controller you should Separation Method and Controller
     'ControllerMethodSeparation'    => "@",
 
+    // Defines the prefix used for template directives (@if, @foreach)
+    'PrefixCharCoolEngine'           => "#",
+
     // Set Base Routes File
     'RoutesFile'                    => "index",
 

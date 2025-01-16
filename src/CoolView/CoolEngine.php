@@ -2,6 +2,7 @@
 
 namespace CoolView;
 
+use Configuration\Config;
 use CoolView\DTO\CoolEngineDTO;
 use CoolView\Patterns\Directive;
 
@@ -12,6 +13,10 @@ final class CoolEngine {
     public function __construct(string $viewsPath, string $cachePath){
         $this->viewsPath = rtrim($viewsPath, '/');
         $this->cachePath = rtrim($cachePath, '/');
+    }
+
+    public function asset(string $path): string {
+        return '/public/' . ltrim($path, '/');
     }
 
     public function render(string $view, array $data = []): string {
@@ -72,8 +77,12 @@ final class CoolEngine {
     private function parseDirectives(string $template): string {
         $directives = self::get();
 
+        $PrefixCharCoolEngine = Config::get('app.PrefixCharCoolEngine');
+
         foreach ($directives as $key => $callback) {
-            $pattern = "/@$key\\s*(?:\\((.+?)\\))?/";
+            $pattern = $key === 'variable'
+                ? '/\{\{\s*(.+?)\s*\}\}/'
+                : "/{$PrefixCharCoolEngine}$key\\s*(?:\\((.+?)\\))?/";
             $template = preg_replace_callback($pattern, static function ($matches) use ($callback) {
                 return $callback($matches[1] ?? null);
             }, $template);

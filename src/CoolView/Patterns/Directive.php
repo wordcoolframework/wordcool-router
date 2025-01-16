@@ -12,6 +12,11 @@ trait Directive {
                 return "<?php echo htmlspecialchars({$match}, ENT_QUOTES, 'UTF-8'); ?>";
             },
 
+            // Asset
+            'asset' => function ($match) {
+                return "<?php echo \$this->asset({$match}); ?>";
+            },
+
             // Conditional statements
             'if' => function ($match) {
                 return "<?php if ({$match}): ?>";

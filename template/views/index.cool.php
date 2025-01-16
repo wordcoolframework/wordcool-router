@@ -1,22 +1,22 @@
-@extends('layout')
+#extends('layout')
 
-@section('content')
+#section('content')
 
     <h2>{{ __('welcome') }}</h2>
     <h3>currentLocalize is :{{ $currentLocalize }}</h3>
 
-    @istrue($isOk)
+    #istrue($isOk)
         <p>The variable is true!</p>
-    @endif
+    #endif
 
-    @if($welcome !== 'welcome')
+    #if($welcome !== 'welcome')
         <p>is arash</p>
-    @else
+    #else
         <p>is not arash</p>
-    @endif
+    #endif
 
-    @isnull($family)
+    #isnull($family)
         <p>family is null</p>
-    @endif
+    #endif
 
-@endsection
+#endsection
