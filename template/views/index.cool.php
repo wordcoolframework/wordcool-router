@@ -3,7 +3,6 @@
 #section('content')
 
     <h2>{{ __('welcome') }}</h2>
-    <h3>currentLocalize is :{{ $currentLocalize }}</h3>
 
     #istrue($isOk)
         <p>The variable is true!</p>
@@ -18,5 +17,10 @@
     #isnull($family)
         <p>family is null</p>
     #endif
+
+    <form action="{{ route('handleForm') }}" method="post">
+        <input type="text" name="fname" placeholder="enter fname">
+        <input type="submit" value="submit">
+    </form>
 
 #endsection

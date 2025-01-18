@@ -23,7 +23,7 @@ if (!function_exists('resJson')) {
 
         header("Content-Type: application/json");
 
-        echo json_encode($data, true); exit();
+        echo json_encode($data, JSON_THROW_ON_ERROR | true); exit();
 
     }
 
@@ -70,6 +70,17 @@ if(!function_exists('cool')){
 
     function cool() : CoolEngine{
         return new CoolEngine(getcwd() . '/template/views', getcwd() . '/template/caches');
+    }
+
+}
+
+
+if(!function_exists('route')){
+
+    function route($routeName, ?array $params = []){
+
+        return \Router\Route::route($routeName, $params);
+
     }
 
 }

@@ -14,8 +14,8 @@ Route::addMiddleware('Auth');
 Route::localized('/about',
     'AboutController@index'
 );
-
-
+Route::post('en/handleForm', 'AboutController@handleForm')
+    ->name('handleForm');
 //Route::get('handle-middileware', static function (){
 //    echo "Pass Middleware";
 //})->closureMiddleware(

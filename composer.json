@@ -7,6 +7,7 @@
             "Router\\": "src/Router/",
             "Configuration\\": "src/Configuration/",
             "CoolView\\": "src/CoolView/",
+            "LiveCool\\":  "src/LiveCool",
             "CommandStyle\\": "src/CommandStyle/",
             "App\\": "App/"
         },

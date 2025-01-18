@@ -27,7 +27,7 @@ final class CoolEngine {
             throw new \RuntimeException("View file '{$view}' not found.");
         }
 
-        $compiledFile = $this->cachePath . '/' . md5($view) . '.php';
+        $compiledFile = $this->cachePath . '/' . md5($view) . '.cool.php';
 
         if (!file_exists($compiledFile) || filemtime($templateFile) > filemtime($compiledFile)) {
             $this->compile($templateFile, $compiledFile);
