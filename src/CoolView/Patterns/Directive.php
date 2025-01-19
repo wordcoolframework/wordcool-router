@@ -2,6 +2,8 @@
 
 namespace CoolView\Patterns;
 
+use CoolView\CSRFService\CSRFService;
+
 trait Directive {
 
     public static function get() : array {
@@ -10,6 +12,17 @@ trait Directive {
             // Variables
             'variable' => function ($match) {
                 return "<?php echo htmlspecialchars({$match}, ENT_QUOTES, 'UTF-8'); ?>";
+            },
+
+            'csrf' => function () {
+                return "<input 
+                type='hidden' 
+                name='_token' 
+                value=\"" . htmlspecialchars(CSRFService::getToken(),
+                        ENT_QUOTES,
+                        'UTF-8'
+                    ) . "\"
+                >";
             },
 
             // Asset

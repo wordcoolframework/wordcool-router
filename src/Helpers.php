@@ -84,3 +84,14 @@ if(!function_exists('route')){
     }
 
 }
+
+
+if (!function_exists('csrfValidate')){
+
+    function csrfValidate(string $token) : bool {
+
+        return CoolView\CSRFService\CSRFService::validateToken($token);
+
+    }
+
+}

@@ -18,7 +18,14 @@
         <p>family is null</p>
     #endif
 
+    <?php
+        $age = 23;
+    ?>
+
+    <b>{{ $age }}</b>
+
     <form action="{{ route('handleForm') }}" method="post">
+        #csrf
         <input type="text" name="fname" placeholder="enter fname">
         <input type="submit" value="submit">
     </form>
