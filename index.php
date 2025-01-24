@@ -7,15 +7,14 @@ use App\Http\Controllers\SimpleController;
 
 use Router\Route;
 
-
 Route::addMiddleware('Auth');
-
 
 Route::localized('/about',
     'AboutController@index'
 );
 Route::post('en/handleForm', 'AboutController@handleForm')
     ->name('handleForm');
+
 //Route::get('handle-middileware', static function (){
 //    echo "Pass Middleware";
 //})->closureMiddleware(
@@ -45,11 +44,13 @@ Route::prefix('admin', static function () {
 
 
 
-//Route::get('/', static function () : \Illuminate\Contracts\Support\Jsonable{
-//    return resJson([
-//        'data' => req()->get('test')
-//    ]200);
-//});
+Route::get('/json', static function () {
+    return resJson([
+        'data' => [
+            'name' => 'arash narimani'
+        ]
+    ], 200);
+});
 
 
 
@@ -60,11 +61,12 @@ Route::get('get-users', static function(){
 
 Route::get('/', static function(){
     (new SimpleController())->index();
-})->name('home');
-//    ->activeBetween(
-//        '2023-01-01 00:00:00',
-//        '2023-01-10 23:59:59'
-//    );
+})
+    ->name('home')
+    ->activeBetween(
+        '2023-01-01 00:00:00',
+        '2023-01-10 23:59:59'
+    );
 
 Route::get('post/:id/comments/:comment', static function (int $postId, string $commentId) {
     echo "Post id : $postId and Commend id: $commentId";

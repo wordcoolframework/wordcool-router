@@ -30,4 +30,48 @@
         <input type="submit" value="submit">
     </form>
 
+    <hr><hr>
+    <p>new decoration methods</p>
+
+    #foreach($items as $item)
+        #if($item == 'skip')
+            #continue
+        #endif
+
+        #if($item == 'stop')
+            #break
+        #endif
+
+        <p>{{ $item }}</p>
+    #endforeach
+
+    <hr>
+    #repeat('it`s cool | ', 3)
+
+    <hr>
+    #link('https://example.com')
+
+    <hr>
+
+    #concat(['Hello', ' ', 'World', '!'])
+
+    <hr>
+
+    #default([$family, 'Guest'])
+    <hr>
+
+    #isgreater([10, 5])
+        <p>۱۰ بزرگ‌تر از ۵ است.</p>
+    #endisgreater
+
+    #isless([3, 7])
+        <p>۳ کوچک‌تر از ۷ است.</p>
+    #endisless
+
+    #fileexists('/path/to/file.txt')
+        <p>فایل موجود است.</p>
+    #endfileexists
+
+    #dd($items)
+
 #endsection

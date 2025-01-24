@@ -93,6 +93,65 @@ trait Directive {
             'isnotnull' => function ($match) {
                 return "<?php if (!is_null({$match})): ?>";
             },
+
+            'date' => function ($match) {
+                return "<?php echo date('Y-m-d', strtotime({$match})); ?>";
+            },
+            'isset' => function ($match) {
+                return "<?php if (isset({$match})): ?>";
+            },
+            'endisset' => function () {
+                return "<?php endif; ?>";
+            },
+            'empty' => function ($match) {
+                return "<?php if (empty({$match})): ?>";
+            },
+            'endempty' => function () {
+                return "<?php endif; ?>";
+            },
+            'break' => function () {
+                return "<?php break; ?>";
+            },
+            'continue' => function () {
+                return "<?php continue; ?>";
+            },
+            'repeat' => function ($match) {
+                $arguments = explode(',', $match);
+                $string = trim($arguments[0] ?? "''");
+                $times = trim($arguments[1] ?? '1');
+
+                return "<?php echo str_repeat({$string}, {$times}); ?>";
+            },
+            'link' => function ($match) {
+                return "<?php echo '<a href=\"' . htmlspecialchars({$match}, ENT_QUOTES, 'UTF-8') . '\">' . htmlspecialchars({$match}, ENT_QUOTES, 'UTF-8') . '</a>'; ?>";
+            },
+            'dd' => function($match){
+                return "<?php dd({$match}) ?>";
+            },
+            'concat' => function ($match) {
+                return "<?php echo implode('', {$match}); ?>";
+            },
+            'default' => function ($match) {
+                return "<?php echo !empty({$match}[0]) ? {$match}[0] : {$match}[1]; ?>";
+            },
+            'isgreater' => function ($match) {
+                return "<?php if ({$match}[0] > {$match}[1]): ?>";
+            },
+            'isless' => function ($match) {
+                return "<?php if ({$match}[0] < {$match}[1]): ?>";
+            },
+            'endisgreater' => function () {
+                return "<?php endif; ?>";
+            },
+            'endisless' => function () {
+                return "<?php endif; ?>";
+            },
+            'fileexists' => function ($match) {
+                return "<?php if (file_exists({$match})): ?>";
+            },
+            'endfileexists' => function () {
+                return "<?php endif; ?>";
+            },
         ];
 
     }

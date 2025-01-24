@@ -7,7 +7,7 @@ use Router\Route;
 
 class HomeController {
 
-    public function index(int $id)  {
+    public function index(int $id) : void {
         echo $id;
     }
 
