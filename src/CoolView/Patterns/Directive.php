@@ -152,6 +152,14 @@ trait Directive {
             'endfileexists' => function () {
                 return "<?php endif; ?>";
             },
+
+            'inject' => function ($match) {
+                $arguments = explode(',', $match);
+                $variable = trim($arguments[0] ?? "''", "' ");
+                $namespace = trim($arguments[1] ?? "''", "' ");
+
+                return "<?php \${$variable} = new {$namespace}(); ?>";
+            },
         ];
 
     }

@@ -72,6 +72,12 @@
         <p>فایل موجود است.</p>
     #endfileexists
 
-    #dd($items)
+
+    #inject(
+        'simple',
+        App\Http\Controllers\SimpleController
+    )
+
+    {{ $simple->index() }}
 
 #endsection
