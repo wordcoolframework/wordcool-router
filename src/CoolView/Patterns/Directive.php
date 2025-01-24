@@ -154,14 +154,30 @@ trait Directive {
             },
 
             'inject' => function ($match) {
-                $arguments = explode(',', $match);
-                $variable = trim($arguments[0] ?? "''", "' ");
-                $namespace = trim($arguments[1] ?? "''", "' ");
+                $arguments  = explode(',', $match);
+                $variable   = trim($arguments[0] ?? "''", "' ");
+                $namespace  = trim($arguments[1] ?? "''", "' ");
 
                 return "<?php \${$variable} = new {$namespace}(); ?>";
             },
+
         ];
 
+    }
+
+    public function getFilters(): array {
+        return [
+            'upper'     => 'strtoupper',  // تبدیل به حروف بزرگ
+            'lower'     => 'strtolower',  // تبدیل به حروف کوچک
+            'first'     => 'firstElement', // اولین عنصر آرایه
+            'last'      => 'lastElement',   // آخرین عنصر آرایه
+            'length'    => 'stringLength', // طول رشته
+            'trim'      => 'trimString',    // حذف فاصله‌های اضافی در ابتدا و انتهای رشته
+            'replace'   => 'replaceString',  // جایگزینی متن در رشته
+            'join'      => 'joinArray',     // تبدیل آرایه به رشته با یک جداکننده
+            'split'     => 'splitString',  // تقسیم رشته به آرایه
+            'slug'      => 'generateSlug',  // تولید اسلاگ از رشته
+        ];
     }
 
 }

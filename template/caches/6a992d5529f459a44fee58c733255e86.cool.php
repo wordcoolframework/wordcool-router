@@ -21,7 +21,7 @@
         <input 
                 type='hidden' 
                 name='_token' 
-                value="40f488d8dd4ced9b8f5ddc6291ea80dbcb3c1bbae4652a360659040293d9b34b"
+                value="bd54230f11a09de0bc8298724287c78a9b5c10ba5c792ae6d8ade4a7565ea535"
                 ><input type="text" name="fname" placeholder="enter fname">
         <input type="submit" value="submit">
     </form>
@@ -57,5 +57,16 @@
     <?php endif; ?><?php $simple = new App\Http\Controllers\SimpleController(); ?>
 
     <?php echo htmlspecialchars($simple->index(), ENT_QUOTES, 'UTF-8'); ?>
+
+    <hr><hr>
+
+
+    <?php echo strtoupper($full_name); ?>
+<br>
+
+    <?php echo lastElement([1, 2, 3]); ?>
+<br>
+    <?php echo firstElement([1, 2, 3]); ?>
+
 
 <?php $this->endSection(); ?>

@@ -76,8 +76,18 @@ final class CoolEngine {
 
     private function parseDirectives(string $template): string {
         $directives = self::get();
+        $filters = $this->getFilters();
 
         $PrefixCharCoolEngine = Config::get('app.PrefixCharCoolEngine');
+
+        $template = preg_replace_callback('/\{\{\s*(.+?)\s*\|\s*(\w+)\s*\}\}/', function ($matches) use ($filters) {
+            $variable = $matches[1] ?? '';
+            $filter = $matches[2] ?? '';
+            if (isset($filters[$filter])) {
+                return "<?php echo {$filters[$filter]}({$variable}); ?>";
+            }
+            return $matches[0];
+        }, $template);
 
         foreach ($directives as $key => $callback) {
             $pattern = $key === 'variable'

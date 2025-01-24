@@ -73,11 +73,19 @@
     #endfileexists
 
 
-    #inject(
-        'simple',
-        App\Http\Controllers\SimpleController
-    )
+    #inject('simple', App\Http\Controllers\SimpleController)
 
     {{ $simple->index() }}
+
+    <hr><hr>
+
+
+    {{ $full_name | upper }}
+<br>
+
+    {{ [1, 2, 3] | last }}
+<br>
+    {{ [1, 2, 3] | first }}
+
 
 #endsection

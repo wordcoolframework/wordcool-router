@@ -2,6 +2,8 @@
 
 use CoolView\CoolEngine;
 
+require_once getcwd() . "/src/CoolView/Filters/filters.php";
+
 if (!function_exists('req')){
 
     function req(): \Illuminate\Http\Request{
