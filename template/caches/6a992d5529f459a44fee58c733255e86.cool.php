@@ -21,7 +21,7 @@
         <input 
                 type='hidden' 
                 name='_token' 
-                value="bd54230f11a09de0bc8298724287c78a9b5c10ba5c792ae6d8ade4a7565ea535"
+                value="6cc398388b9c3b9531d0189344e0c2a3abd0716e3665afccf99ef4bf829e2670"
                 ><input type="text" name="fname" placeholder="enter fname">
         <input type="submit" value="submit">
     </form>
@@ -64,9 +64,13 @@
     <?php echo strtoupper($full_name); ?>
 <br>
 
-    <?php echo lastElement([1, 2, 3]); ?>
+    <?php echo lastElement($items); ?>
 <br>
-    <?php echo firstElement([1, 2, 3]); ?>
+    <?php echo firstElement($items); ?>
+<br>
+    <?php echo capitalizeString($full_name); ?>
+<br>
 
-
+<br>
+<?php echo arrayKeys($items); ?>
 <?php $this->endSection(); ?>

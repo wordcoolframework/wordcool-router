@@ -83,9 +83,12 @@
     {{ $full_name | upper }}
 <br>
 
-    {{ [1, 2, 3] | last }}
+    {{ $items | last }}
 <br>
-    {{ [1, 2, 3] | first }}
+    {{ $items | first }}
+<br>
+    {{ $full_name | capitalize }}
+<br>
 
-
+<br>
 #endsection

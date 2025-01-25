@@ -36,3 +36,14 @@ function generateSlug($string): ?string{
     }
     return null;
 }
+
+function absValue($number): float|int|null {
+    return is_numeric($number) ? abs($number) : null;
+}
+
+function capitalizeString($string) : string {
+    if (is_string($string)) {
+        return ucfirst(strtolower($string));
+    }
+    return $string;
+}

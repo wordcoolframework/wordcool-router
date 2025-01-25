@@ -177,6 +177,8 @@ trait Directive {
             'join'      => 'joinArray',     // تبدیل آرایه به رشته با یک جداکننده
             'split'     => 'splitString',  // تقسیم رشته به آرایه
             'slug'      => 'generateSlug',  // تولید اسلاگ از رشته
+            'abs'       => 'absValue', // مطلق یک عدد
+            'capitalize'=> 'capitalizeString', // تبدیل اولین حرف به بزرگ
         ];
     }
 

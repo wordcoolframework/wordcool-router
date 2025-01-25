@@ -80,7 +80,7 @@ final class CoolEngine {
 
         $PrefixCharCoolEngine = Config::get('app.PrefixCharCoolEngine');
 
-        $template = preg_replace_callback('/\{\{\s*(.+?)\s*\|\s*(\w+)\s*\}\}/', function ($matches) use ($filters) {
+        $template = preg_replace_callback('/\{\{\s*(.+?)\s*\|\s*(\w+)\s*\}\}/', static function ($matches) use ($filters) {
             $variable = $matches[1] ?? '';
             $filter = $matches[2] ?? '';
             if (isset($filters[$filter])) {
